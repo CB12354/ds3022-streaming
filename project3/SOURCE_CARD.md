@@ -7,31 +7,70 @@ Fill this in during Session 1 (Thu 05 Nov) with **measured** numbers from `pytho
 
 ## 1. The source
 - Source and URL:
-- Method (WebSocket push, REST polling or REST history pull):
-- Account, key or User-Agent needed:
+- Method (WebSocket push, REST polling or REST history pull): WS Push
+  - FILTER BY commit.collection == "app.bsky.feed.post" for accepted items. Keep an eye out for post deletions.
+- Account, key or User-Agent needed: Not applicable, no account needed and access is free
 - Limits I know about (rate limits, paging, reconnects):
 
 ## 2. One real message
-Paste one message from the probe (shorten long text fields):
 
 ```json
-
+{
+  "did": "did:plc:rqnsewen5pkndd5vh5v6mdgg",
+  "time_us": 1793886599464783,
+  "cursor": 26843213546,
+  "kind": "commit",
+  "commit": {
+    "rev": "3mzkz4sf72e2t",
+    "operation": "create",
+    "collection": "app.bsky.feed.post",
+    "rkey": "3mzkz4rxxu22i",
+    "record": {
+      "$type": "app.bsky.feed.post",
+      "createdAt": "2026-11-05T13:49:58.921Z",
+      "facets": [
+        {
+          "features": [
+            {
+              "$type": "app.bsky.richtext.facet#tag",
+              "tag": "FX戦士くるみちゃん"
+            }
+          ],
+          "index": {
+            "byteEnd": 37,
+            "byteStart": 10
+          }
+        }
+      ],
+      "langs": [
+        "ja"
+      ],
+      "text": "翌日。 #FX戦士くるみちゃん"
+    },
+    "cid": "bafyreicej56smrfdsdalyyhixmev33korhoxenqarhz6vxhr4lwwnbrf4a"
+  }
+}
 ```
 
 ## 3. Volume maths
-- Measured rate (from the probe):            per
-- Live capture needed for 50,000:
-- History / backfill available? How many days?
-- My plan to reach 50,000 raw records by the start of Session 3 (Thu 12 Nov):
+- Measured rate (from the probe): 64.64 per second
+- Live capture needed for 50,000: 773.5 seconds
+- History / backfill available? How many days? *Limited, available for 1 day* 
+- My plan to reach 50,000 raw records by the start of Session 3 (Thu 12 Nov): Easily doable within an evening, capture time for 50k posts is very short and maintenance on Bluesky is conducted sporadically but tends to be short.
 
 ## 4. Topic design
-- Topic name:                          (created with `-p 3 -r 3` **before** the producer runs)
-- Kafka key:
-- Why this key (ordering, spread across partitions):
+- Topic name: bsky_posts (created with `-p 3 -r 3` **before** the producer runs)
+- Kafka key: Key is did combined with commit.rkey so it's by post instead of by user
+  - (commit.operation tells what happens, being create or delete)
+- Why this key (ordering, spread across partitions): 
+  - Message volume is extremely high so spreading should be about even for each. Any commit-type option (which contains all posts) has an rkey, so if commit is missing then it implies the action is not a post and should be ignored. 
+  - Some users will post way more than others (bot accounts, corporate accounts, etc.) so splits by individual posts would be more evenly split than by account
 
 ## 5. Duplicates
 - What makes two records **the same Kafka record**? (landed twice by the lander)
+  - Same did, time_us(?)
 - What makes two records **the same thing** (the same trade, post, aircraft position)?
+  - Same did, rid, and operation.
 - If the same thing can arrive in several versions, which one do I keep?
 
 ## 6. Research question (draft)
@@ -40,10 +79,10 @@ Paste one message from the probe (shorten long text fields):
 ## 7. Self-check (checkpoint A)
 Tick a box by changing `[ ]` to `[x]`. If a box stays empty, fix the card or choose another source from SOURCES.md. `kit/check_project.py` counts these boxes.
 
-- [ ] I ran the probe for this source today and messages arrived (own idea: it worked here, in class)
-- [ ] The rate in section 3 is measured, not guessed
-- [ ] My volume plan reaches 50,000 raw records before Session 3 (Thu 12 Nov), with margin
-- [ ] It needs no API key or account that takes days to get
+- [x] I ran the probe for this source today and messages arrived (own idea: it worked here, in class)
+- [x] The rate in section 3 is measured, not guessed
+- [x] My volume plan reaches 50,000 raw records before Session 3 (Thu 12 Nov), with margin
+- [x] It needs no API key or account that takes days to get
 - [ ] My key has a reason that fits my question
 - [ ] I named both kinds of duplicates for my source
 - [ ] My draft question can be answered with a time window, a comparison, an anomaly or a join
