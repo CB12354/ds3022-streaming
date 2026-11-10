@@ -7,11 +7,27 @@
 
 ## Data source
 
-_(replace: what source, which URL or stream, pull or push, what one message contains. Mention any account, key or User-Agent needed. If you replay an archive rather than stream live, say so.)_
+Push: Bluesky. Pulls activity from Bluesky, a social networking service. No account, key, or user-agent are needed. A single message contains details about the user, action type, and data about the action, usually text if it was a post. Data comes out of a stream, not an archive.
 
 ## How to run
 
 _(replace: the exact commands, in order, from a fresh clone. A classmate will follow them in Session 4 (Mon 16 Nov) without asking you. Include: virtual environment and `pip install`, starting the cluster, creating the topic, running the producer and lander, running the flow on the full data and on the sample:)_
+
+Without any running containers, from the main folder:
+
+```bash
+# Virtual Environment
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# Make sure Docker is installed and the daemon is running
+docker compose up -d
+
+docker exec -it redpanda-0 rpk topic create bsky_posts -p 3 -r 3
+docker exec -it redpanda-0 rpk cluster info
+
+````
 
 ```bash
 cd project3

@@ -12,7 +12,7 @@ Fill this in during Session 1 (Thu 05 Nov) with **measured** numbers from `pytho
 - Account, key or User-Agent needed: Not applicable, no account needed and access is free
 - Limits I know about (rate limits, paging, reconnects):
 
-## 2. One real message
+## 2. One message
 
 ```json
 {
@@ -68,13 +68,14 @@ Fill this in during Session 1 (Thu 05 Nov) with **measured** numbers from `pytho
 
 ## 5. Duplicates
 - What makes two records **the same Kafka record**? (landed twice by the lander)
-  - Same did, time_us(?)
+  - Same partition and offset
 - What makes two records **the same thing** (the same trade, post, aircraft position)?
-  - Same did, rid, and operation.
+  - Same did, rid, operation. CID can't be used because that's missing from deletions
 - If the same thing can arrive in several versions, which one do I keep?
 
 ## 6. Research question (draft)
-- One question I could answer with time windows, a comparison, an anomaly or a join:
+- One question I could answer with time windows, a comparison, an anomaly or a join: *How long in characters, grouped by language, are Bluesky posts on average? What does the distribution look like?*
+  - Not every post has a language, but most do.
 
 ## 7. Self-check (checkpoint A)
 Tick a box by changing `[ ]` to `[x]`. If a box stays empty, fix the card or choose another source from SOURCES.md. `kit/check_project.py` counts these boxes.
@@ -83,6 +84,6 @@ Tick a box by changing `[ ]` to `[x]`. If a box stays empty, fix the card or cho
 - [x] The rate in section 3 is measured, not guessed
 - [x] My volume plan reaches 50,000 raw records before Session 3 (Thu 12 Nov), with margin
 - [x] It needs no API key or account that takes days to get
-- [ ] My key has a reason that fits my question
-- [ ] I named both kinds of duplicates for my source
-- [ ] My draft question can be answered with a time window, a comparison, an anomaly or a join
+- [x] My key has a reason that fits my question
+- [x] I named both kinds of duplicates for my source
+- [x] My draft question can be answered with a time window, a comparison, an anomaly or a join

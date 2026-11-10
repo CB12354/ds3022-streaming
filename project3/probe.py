@@ -119,7 +119,7 @@ def paths(obj, prefix=""):
     return out
 
 
-def shorten(obj, limit=900):
+def shorten(obj, limit=9999):
     text = json.dumps(obj, ensure_ascii=False, indent=2)
     return text if len(text) <= limit else text[:limit] + "\n  ... (cut)"
 

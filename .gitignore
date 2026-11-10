@@ -18,3 +18,5 @@ data/*
 __pycache__/
 *.log
 *.DS_Store
+probe_mod.py
+.claude
