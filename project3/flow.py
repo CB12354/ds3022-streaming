@@ -133,7 +133,7 @@ def chart(replies: bool):
     for ax in axes.flat[len(langs):]:   # blank out unused cells in the last row
         ax.set_visible(False)
 
-    fig.supxlabel("characters per post (max 300)")
+    fig.supxlabel("graphemes per post (max 300)")
     fig.supylabel("% of that language's posts")
     fig.suptitle(f"{'Reply' if replies else 'Parent post'} length distribution, "
                  f"top {len(langs)} languages")

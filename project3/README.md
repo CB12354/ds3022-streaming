@@ -3,39 +3,45 @@
 **Author:** Cameron Berryman
 **DS 3022 Data Project 3, Fall 2026**
 
-> There is no interview for this project: this README is where you explain and defend your pipeline. Fill in the title, your name and every italic placeholder, then delete this note. Keep the headings: `kit/check_project.py` looks for them.
-
 ## Data source
 
 Push: Bluesky. Pulls activity from Bluesky, a social networking service. No account, key, or user-agent are needed. A single message contains details about the user, action type, and data about the action, usually text if it was a post. Data comes out of a stream, not an archive.
 
 ## How to run
 
-_(replace: the exact commands, in order, from a fresh clone. A classmate will follow them in Session 4 (Mon 16 Nov) without asking you. Include: virtual environment and `pip install`, starting the cluster, creating the topic, running the producer and lander, running the flow on the full data and on the sample:)_
-
-Without any running containers, from the main folder:
-
+Without any running Docker containers, from the main folder:
 ```bash
 # Virtual Environment
-python -m venv .venv
+python -m venv .venv # try python3 if python by itself fails
 source .venv/bin/activate
 pip install -r requirements.txt
 
-# Make sure Docker is installed and the daemon is running
-docker compose up -d
+# Make sure Docker is installed and the daemon is running.
+docker compose up -d    # compose the Redpanda (Kafka) cluster. Certain ports need to be free to run this command. If you run into conflicts, use "docker compose down -d" instead.
 
 docker exec -it redpanda-0 rpk topic create bsky_posts -p 3 -r 3
 docker exec -it redpanda-0 rpk cluster info
-
-````
+```
 
 ```bash
+# Collect data - skip if using existing data
 cd project3
-python producer.py              # connects to the Bluesky websocket and collects messages from it to place into the topic. Stop after ~17 minutes
-python lander.py                # lands the messages as parquet files in project3/data/raw
-python kit/make_sample.py       # collects a sample of the data and puts it in project3/data/sample
+python producer.py              # connects to the Bluesky websocket and collects messages from it to place into the topic. Keyboard interrupt after ~17 minutes for 50k messages
+```
+Open a new terminal window, keep the old one
+```bash
+python lander.py                # lands the messages as parquet files in project3/data/raw. Stop after the lander is no longer landing messages (60 second timeout on last set of messages, will likely end on a collection that is less than 1000 and that is when it is safe to keyboard interrupt it)
+python kit/make_sample.py       # collects a sample of the data and puts it in project3/data/sample. Replaces sample data if it already exists, so skip if the sample data numbers should exactly match what I have in the tables
+```
+Open a new terminal window, keep the old two
+```bash
+prefect config set PREFECT_API_URL=http://127.0.0.1:4200/api            #makes sure the prefect server persists and is non-temporary
 prefect server start            # starts the Prefect server
+```
+Open a new terminal window, keep the old three
+```bash
 python flow.py data/sample      # runs the flow on the committed sample. Check the results in project3/charts
+python flow.py                  # runs the flow on the entire dataset.  
 ```
 
 ## Architecture
@@ -108,6 +114,7 @@ The most important thing I learned about streaming systems is that you need to p
 
 Instructor: Alfonso Pons  
 Generative AI: Claude Code, Opus 5.5
+- I had a mishap in the last stages of my project where my lander file got deleted due to a renaming issue in git (originally called bsky_lander.py, got removed when renaming it to lander.py) and committing over it. The current lander.py is a copy identical to the version I had when it was deleted. If the lander shows as entirely AI-generated, it's because it is recovered from a clone of my repo that Claude made to test my reproduction instructions worked. It's not actually AI generated. I tested the recovered lander and it works as intended.
 - Created a modified version of the probing script that tracks instances of duplicate did and rkey combinations (updates or deletions to the same post), as well as percentage prevalence of other JSON keys in messages that have both did and rkey in them and what message types (create, update, delete) were missing those keys. Helped me understand what keys were useful for making a Kafka key, such as what keys were missing from only deletions. I sampled some of the messages and read through them to check if the results seemed appropriate.
 - Originally, I didn't have an envelope around the data, as I thought that was a convention of the earthquakes data set specifically rather than a convention to wrap all data sets. Claude helped me understand why enveloping mattered for message production (action field and data field) and refactored my existing code in the producer and lander to compensate for adding the envelope. 
 - Helped implement logging and recovering data when the producer disconnected from Jetstream by saving the cursor at a timestamp. I tested this one manually by cutting my WiFi connection.
