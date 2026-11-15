@@ -17,7 +17,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 
 # Make sure Docker is installed and the daemon is running.
-docker compose up -d    # compose the Redpanda (Kafka) cluster. Certain ports need to be free to run this command. If you run into conflicts, use "docker compose down -d" instead.
+docker compose up -d    # compose the Redpanda (Kafka) cluster. Certain ports need to be free to run this command. If you run into conflicts, use "docker compose down" and then try it again.
 
 docker exec -it redpanda-0 rpk topic create bsky_posts -p 3 -r 3
 docker exec -it redpanda-0 rpk cluster info
