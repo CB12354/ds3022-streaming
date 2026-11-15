@@ -21,23 +21,23 @@ Tick them off in your own copy. Add an entry to **PROGRESS.md** (done / next / b
 ## Session 2 · Mon 09 Nov
 
 ### Checkpoint C: lander writes raw Parquet
-- [ ] `to_row()` keeps partition, offset, key, `action`, `landed_at`, `raw` + your own columns
-- [ ] Batches of 1000 records or 60 s, `.tmp` then rename, offsets stored only after the file exists
-- [ ] Row count in `data/raw/` matches the messages in the topic
+- [x] `to_row()` keeps partition, offset, key, `action`, `landed_at`, `raw` + your own columns
+- [x] Batches of 1000 records or 60 s, `.tmp` then rename, offsets stored only after the file exists
+- [] Row count in `data/raw/` matches the messages in the topic
 
 ### Checkpoint D: chaos round (steps in [CHAOS_CARDS.md](CHAOS_CARDS.md))
-- [ ] Card D1 (crash between file and offsets) with numbers before and after
-- [ ] Card D2 (poison message) with numbers before and after
-- [ ] At least one of D3, D4, D5
-- [ ] "Chaos round" table in README.md
+- [x] Card D1 (crash between file and offsets) with numbers before and after
+- [x] Card D2 (poison message) with numbers before and after
+- [x] At least one of D3, D4, D5
+- [x] "Chaos round" table in README.md
 
 ## Session 3 · Thu 12 Nov
 
 ### Checkpoint E: Prefect flow
-- [ ] **50,000 raw records landed** (hard target at the start of the session)
-- [ ] Tasks: load raw → stage → entities → marts → charts
-- [ ] The four numbers logged; two runs in a row give the same numbers
-- [ ] `python kit/make_sample.py`, then `python flow.py data/sample` runs
+- [x] **50,000 raw records landed** (hard target at the start of the session)
+- [x] Tasks: load raw → stage → entities → marts → charts
+- [x] The four numbers logged; two runs in a row give the same numbers
+- [x] `python kit/make_sample.py`, then `python flow.py data/sample` runs
 - [ ] Screenshots in `docs/`: flow log with the four numbers, Prefect dashboard
 
 ### Checkpoint F (part 1): insight

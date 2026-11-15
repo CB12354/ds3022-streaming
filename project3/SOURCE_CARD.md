@@ -70,7 +70,7 @@ Fill this in during Session 1 (Thu 05 Nov) with **measured** numbers from `pytho
 - What makes two records **the same Kafka record**? (landed twice by the lander)
   - Same partition and offset
 - What makes two records **the same thing** (the same trade, post, aircraft position)?
-  - Same did, rid, operation. CID can't be used because that's missing from deletions
+  - Same did, rid, operation and time_us. CID can't be used because that's missing from deletions. 
 - If the same thing can arrive in several versions, which one do I keep?
 
 ## 6. Research question (draft)
