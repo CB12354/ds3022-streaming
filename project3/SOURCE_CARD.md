@@ -16,39 +16,38 @@ Fill this in during Session 1 (Thu 05 Nov) with **measured** numbers from `pytho
 
 ```json
 {
-  "did": "did:plc:rqnsewen5pkndd5vh5v6mdgg",
-  "time_us": 1793886599464783,
-  "cursor": 26843213546,
-  "kind": "commit",
-  "commit": {
-    "rev": "3mzkz4sf72e2t",
-    "operation": "create",
-    "collection": "app.bsky.feed.post",
-    "rkey": "3mzkz4rxxu22i",
-    "record": {
-      "$type": "app.bsky.feed.post",
-      "createdAt": "2026-11-05T13:49:58.921Z",
-      "facets": [
-        {
-          "features": [
-            {
-              "$type": "app.bsky.richtext.facet#tag",
-              "tag": "FX戦士くるみちゃん"
-            }
-          ],
-          "index": {
-            "byteEnd": 37,
-            "byteStart": 10
-          }
+    "action": "create",
+    "data": {
+        "did": "did:plc:sjknt7vstcnafe4wvhezb7rq",
+        "time_us": 1794762538654802,
+        "cursor": 27217902773,
+        "kind": "commit",
+        "commit": {
+            "rev": "3n2eivszouz2o",
+            "operation": "create",
+            "collection": "app.bsky.feed.post",
+            "rkey": "3n2eivs56ik2h",
+            "record": {
+                "$type": "app.bsky.feed.post",
+                "createdAt": "2026-11-15T17:08:57.532Z",
+                "langs": [
+                    "en"
+                ],
+                "reply": {
+                    "parent": {
+                        "cid": "bafyreielz62aphpmzdtwq2elmgo3tglurzh3bemijxtjfuo6de6223xnpm",
+                        "uri": "at://did:plc:hervmc2h2fuuae4hlzjkwexc/app.bsky.feed.post/3n2eibyw4jk24"
+                    },
+                    "root": {
+                        "cid": "bafyreigz7rrnqlokdk2rw5ayvtiy5uiifr3brk4tsfdp5qfn7uhriovjoa",
+                        "uri": "at://did:plc:sjknt7vstcnafe4wvhezb7rq/app.bsky.feed.post/3n2eeeileyc2w"
+                    }
+                },
+                "text": "Kindness. Pass it on 💜"
+            },
+            "cid": "bafyreifttqblym3ifg3fu7oyt4uynot4dbwncvmb7ys7wsh36hsj2tk4y4"
         }
-      ],
-      "langs": [
-        "ja"
-      ],
-      "text": "翌日。 #FX戦士くるみちゃん"
-    },
-    "cid": "bafyreicej56smrfdsdalyyhixmev33korhoxenqarhz6vxhr4lwwnbrf4a"
-  }
+    }
 }
 ```
 
