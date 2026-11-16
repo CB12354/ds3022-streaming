@@ -9,10 +9,10 @@ Tick them off in your own copy. Add an entry to **PROGRESS.md** (done / next / b
 - [x] Probes run for at least two sources; one source chosen
 - [x] `SOURCE_CARD.md` complete with **measured** numbers (rate, volume plan, key, duplicate identity, draft question)
 - [x] Self-check in section 7 of the card: every box ticked
-- [ ] Repository private with the instructor added as collaborator (or kept public, your choice)
+- [x] Repository private with the instructor added as collaborator (or kept public, your choice)
 
 ### Checkpoint B: producer
-- [ ] Class scripts copied into `project3/` and committed before you change them
+- [x] Class scripts copied into `project3/` and committed before you change them
 - [x] Topic created with `rpk topic create <topic> -p 3 -r 3` **before** the producer runs
 - [x] Every message wrapped in the same envelope (`{"action": ..., "data": ...}`), key as on the card
 - [x] At least 1,000 messages in the topic, spread over 3 partitions; Console screenshot in `docs/`
@@ -23,7 +23,7 @@ Tick them off in your own copy. Add an entry to **PROGRESS.md** (done / next / b
 ### Checkpoint C: lander writes raw Parquet
 - [x] `to_row()` keeps partition, offset, key, `action`, `landed_at`, `raw` + your own columns
 - [x] Batches of 1000 records or 60 s, `.tmp` then rename, offsets stored only after the file exists
-- [] Row count in `data/raw/` matches the messages in the topic
+- [x] Row count in `data/raw/` matches the messages in the topic
 
 ### Checkpoint D: chaos round (steps in [CHAOS_CARDS.md](CHAOS_CARDS.md))
 - [x] Card D1 (crash between file and offsets) with numbers before and after
@@ -38,18 +38,18 @@ Tick them off in your own copy. Add an entry to **PROGRESS.md** (done / next / b
 - [x] Tasks: load raw → stage → entities → marts → charts
 - [x] The four numbers logged; two runs in a row give the same numbers
 - [x] `python kit/make_sample.py`, then `python flow.py data/sample` runs
-- [ ] Screenshots in `docs/`: flow log with the four numbers, Prefect dashboard
+- [x] Screenshots in `docs/`: flow log with the four numbers, Prefect dashboard
 
 ### Checkpoint F (part 1): insight
-- [ ] Research question, query, first chart (insight sprint)
-- [ ] Chart read correctly by a classmate without your help (chart swap), or fixed until it is
+- [x] Research question, query, first chart (insight sprint)
+- [x] Chart read correctly by a classmate without your help (chart swap), or fixed until it is
 
 ## Session 4 · Mon 16 Nov
 
 ### Checkpoint F (part 2): README and submission
-- [ ] README complete: every heading, no `TODO` or `(replace` left
-- [ ] README peer test done; the one place your reader got stuck is fixed
-- [ ] `python kit/check_project.py` prints `READY`
-- [ ] `RUBRIC.md` Self column filled; everything committed and pushed
-- [ ] `git tag dp3-submit` and `git push origin dp3-submit`, **last**
-- [ ] Repository link + rubric on Canvas by **23:59**
+- [x] README complete: every heading, no `TODO` or `(replace` left
+- [x] README peer test done; the one place your reader got stuck is fixed
+- [x] `python kit/check_project.py` prints `READY`
+- [x] `RUBRIC.md` Self column filled; everything committed and pushed
+- [x] `git tag dp3-submit` and `git push origin dp3-submit`, **last**
+- [x] Repository link + rubric on Canvas by **23:59**
