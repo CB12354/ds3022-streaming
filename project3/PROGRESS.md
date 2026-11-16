@@ -10,18 +10,18 @@ Add to the entry at the end of every class, and whenever you stop working. Short
 
 ## Session 2 · Mon 09 Nov
 - Done: Tested producer and lander scripts and started tracking progress more effectively
-- Raw records so far: 5k?
+- Raw records so far: 5k
 - Next: Write prefect flow with class instructions
 - Blocked:
 
 ## Session 3 · Thu 12 Nov
 - Done: Collected data, written flow.py and created charts
-- Raw records so far: 600k+
+- Raw records so far: 600k
 - Next: Confirm project guidelines, rubric, etc.
 - Blocked:
 
 ## Session 4 · Mon 16 Nov
-- Done:
-- Raw records so far: 600k+
-- Next:
+- Done: Peer review finished, finishing touches on grading documents, revisions to setup instructions
+- Raw records so far: 600k
+- Next: Turn in
 - Blocked:

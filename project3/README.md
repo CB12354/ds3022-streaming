@@ -5,7 +5,7 @@
 
 ## Data source
 
-Push: Bluesky. Pulls activity from Bluesky, a social networking service. No account, key, or user-agent are needed. A single message contains details about the user, action type, and data about the action, usually text if it was a post. Data comes out of a stream, not an archive.
+Push: Bluesky, secure WebSocket (wss://jetstream2.us-east.bsky.network/subscribe?wantedCollections=app.bsky.feed.post). Pulls activity from Bluesky, a social networking service. No account, key, or user-agent are needed. A single message contains details about the user, action type, and data about the action, usually text if it was a post. Data comes out of a stream, not an archive.
 
 ## How to run
 
@@ -51,18 +51,16 @@ python flow.py                  # runs the flow on the entire dataset.
 
 ## Design decisions
 
-Answer each in 2-4 sentences, in your own words, with your own numbers.
-
 1. **Key and partitions.** My key is a combination of 2 items in the message: did and rkey. The two of them ensure that operations linked to the same post (create, edit, delete) all land in the same partition and are read in the correct chronological order. If information about the same post was landed in different partitions (ex. including operation in the key), an edit could be read before the original post on accident. Events with no rkey (account changes) are just did as their key, so those also stay in order for individual accounts. Using did alone would make splits by account instead of by post, which would make bot accounts with high traffic potentially overload a partition. Many other keys would go wrong since they don't appear in every post action, but these two appear guaranteed in any commit involving a parent or reply post, which is the target of the research question.
 2. **Batch size and time.** Batch size is 1000, with a 1-minute time limit. The post volume makes the 1000 mark be hit at almost every opportunity. 64.64 messages per second -> 232704 per hour, which is 233 files. That's a lot. I probably should have set the limit higher.
-3. **Offsets after the file.** A crash sets the offset back to the point where it started reading that file. This is okay, since SQL selection in the flow eliminates duplicates with SELECT DISTINCT.
+3. **Offsets after the file.** A crash sets the offset back to the point where it started reading that file. My chaos card for a crash in the middle of writing had a whole file rewritten with twice as many raw records as unique ones (1190 compared to 595). This is okay, since SQL selection in the flow eliminates duplicates with SELECT DISTINCT.
 4. **Duplicates.** Same partition and offset are the same Kafka record. These are removed in the flow by the staging step, which runs SELECT DISTINCT on the data without the landing time, which is the only difference between the same Kafka record in two places. A post with the same did, rkey, operation, and time_us is the same action. These are cleared out in the entities step of the flow, as only one value with the same did, rkey, and operation is kept: the latest one. The SQL is a bit more complicated for this one: 
 ```sql 
 QUALIFY row_number() OVER (PARTITION BY did, rkey, operation ORDER BY time_us DESC, kafka_offset DESC) = 1 
 ``` 
-
-5. **Windows and time.** The time column is the event time. However, the division of data for my research question is based on a comparison between languages of messages, not changes between a time frame. The time window for this problem is just one window, being the entire time I was collecting messages. Time still needs to be tracked, as filtering is done in the unique entities part of the flow based on time to only keep the most recent copy of an event, removing duplicates and only keeping the most recent edit of a post.
-6. **Ten times the volume.** I experienced this firsthand, the lander runs quite slowly with a lot of records backlogged. It likely wouldn't be able to keep up with 10x message volume. My first plan with higher message volume would be to read more messages at maximum so that fewer files need to be written. Since the producer doesn't print every message, it could likely still keep up. The flow isn't tethered to production, as it only reads already fully filled files once, so it would not break with higher message volume.
+With my large sample, 606606 raw records became 598357 unique Kafka records and then 598,187 unique entities after processing.
+1. **Windows and time.** The time column is the event time. However, the division of data for my research question is based on a comparison between languages of messages, not changes between a time frame. The time window for this problem is just one window, being the entire time I was collecting messages. Time still needs to be tracked, as filtering is done in the unique entities part of the flow based on time to only keep the most recent copy of an event, removing duplicates and only keeping the most recent edit of a post.
+2. **Ten times the volume.** I experienced this firsthand, the lander runs quite slowly with a lot of records backlogged. It likely wouldn't be able to keep up with 10x message volume. My first plan with higher message volume would be to read more messages at maximum so that fewer files need to be written. Since the producer doesn't print every message, it could likely still keep up. The flow isn't tethered to production, as it only reads already fully filled files once, so it would not break with higher message volume.
 
 
 ## Chaos round
@@ -97,7 +95,7 @@ From the flow log on the full data (screenshot in `docs/`):
 
 ## Challenges / Obstacles
 
-The sheer volume of messages was a little tough to manage at one point in the project. As you can probably tell from the number of parquet files and the number of records I have, I accidentally left the producer on while I was doing other things and pulled 600000 messages that all needed to be landed. While that only took a few minutes to land and clear the backlog, I needed to turn the producer off to catch up. If this was a real flow that needed continuous production, the clog of messages could have been disastrous for the lander and for file clutter. If I were to do it again, I would try to parse more messages at once so that there would be less writing overhead and fewer files. The messages also had a bit of a confusing ID layout that made selecting a key somewhat difficult, since there are some ID columns that are only present on certain types of messages. I made a copy of the probing script with edits to get statistics about what commit types (create, edit, delete) were missing certain keys. This let me select columns for keys that were present in all messages relevant to my question.
+Reconnection and recovery were an interesting challenge. I hadn't used a cursor as a pointer before, so I had to refactor my whole producer to keep trying to connect and save where it last dropped. Alongside that, the sheer volume of messages was a little tough to manage at one point in the project. As you can probably tell from the number of parquet files and the number of records I have, I accidentally left the producer on while I was doing other things and pulled 600000 messages that all needed to be landed. While that only took a few minutes to land and clear the backlog, I needed to turn the producer off to catch up. If this was a real flow that needed continuous production, the clog of messages could have been disastrous for the lander and for file clutter. If I were to do it again, I would try to parse more messages at once so that there would be less writing overhead and fewer files. The messages also had a bit of a confusing ID layout that made selecting a key somewhat difficult, since there are some ID columns that are only present on certain types of messages. I made a copy of the probing script with edits to get statistics about what commit types (create, edit, delete) were missing certain keys. This let me select columns for keys that were present in all messages relevant to my question.
 
 ## Analysis
 

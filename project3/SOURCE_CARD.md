@@ -2,15 +2,15 @@
 
 Fill this in during Session 1 (Thu 05 Nov) with **measured** numbers from `python probe.py <source>`. Then tick the self-check in section 7 **before** you build the producer: it is how you check that your source will work for the whole project.
 
-**Name:**
-**Date:**
+**Name: Cameron Berryman**
+**Date: 16 Nov 2026**
 
 ## 1. The source
-- Source and URL:
+- Source and URL: Bluesky (Secure Websocket, wss://jetstream2.us-east.bsky.network/subscribe?wantedCollections=app.bsky.feed.post)
 - Method (WebSocket push, REST polling or REST history pull): WS Push
   - FILTER BY commit.collection == "app.bsky.feed.post" for accepted items. Keep an eye out for post deletions.
 - Account, key or User-Agent needed: Not applicable, no account needed and access is free
-- Limits I know about (rate limits, paging, reconnects):
+- Limits I know about (rate limits, paging, reconnects): No rate limits, limited access out of courtesy. Reconnection targets an older message using a cursor (`?cursor=`). The maximum page size is 1 day for the firehose, so there is a 1-day replay window.
 
 ## 2. One message
 
@@ -69,7 +69,7 @@ Fill this in during Session 1 (Thu 05 Nov) with **measured** numbers from `pytho
 - What makes two records **the same Kafka record**? (landed twice by the lander)
   - Same partition and offset
 - What makes two records **the same thing** (the same trade, post, aircraft position)?
-  - Same did, rid, operation and time_us. CID can't be used because that's missing from deletions. 
+  - Same did, rkey, operation and time_us. CID can't be used because that's missing from deletions. 
 - If the same thing can arrive in several versions, which one do I keep?
 
 ## 6. Research question (draft)

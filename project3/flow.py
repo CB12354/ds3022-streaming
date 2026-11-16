@@ -25,7 +25,7 @@ CHART = "charts/langs_length_{kind}" + TAG + ".png"   # kind = "parents" or "rep
 
 @task(retries=2, retry_delay_seconds=5)
 def load_raw():
-    with duckdb.connect(DB) as con:  # the flow is the ONLY writer of quakes.duckdb
+    with duckdb.connect(DB) as con:  # the flow is the ONLY writer of bsky.duckdb
         con.execute(f"CREATE OR REPLACE TABLE raw_posts AS SELECT * FROM read_parquet('{RAW}')")
         return con.execute("SELECT count(*) FROM raw_posts").fetchone()[0]
 
@@ -64,7 +64,7 @@ def entities():
         return con.execute("SELECT count(*) FROM posts").fetchone()[0]
 
 TOP_LANGS = 12  # 4x3 grid; the long tail of languages has too few posts to histogram
-BIN = 20        # characters per bin -> 15 bins across 0..300
+BIN = 20        # graphemes per bin -> 15 bins across 0..300
 
 
 @task

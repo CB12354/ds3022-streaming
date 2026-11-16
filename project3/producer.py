@@ -9,7 +9,6 @@ import json
 import logging
 import sys
 import time
-from datetime import datetime, timedelta, timezone
 
 import requests
 from quixstreams import Application
@@ -22,7 +21,7 @@ WSS_URL = "wss://jetstream2.us-east.bsky.network/subscribe?wantedCollections=app
 
 def send(producer, message):
     """One Kafka record per message. Key = the event id, so every
-    version of the same earthquake goes to the same partition, in order."""
+    version of the same post goes to the same partition, in order."""
     commit = message.get('commit', {})
     action = commit.get('operation', message.get('kind', 'unknown'))
     did, rkey = message.get('did'), commit.get('rkey')
