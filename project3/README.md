@@ -30,6 +30,7 @@ python producer.py              # connects to the Bluesky websocket and collects
 ```
 Open a new terminal window, keep the old one
 ```bash
+cd project3
 python lander.py                # lands the messages as parquet files in project3/data/raw. Stop after the lander is no longer landing messages (60 second timeout on last set of messages, will likely end on a collection that is less than 1000 and that is when it is safe to keyboard interrupt it)
 python kit/make_sample.py       # SKIP THIS STEP IF THERE ARE ALREADY SAMPLE FILES PRESENT FOR COMPARISON IN GRADING. Collects a sample of the data and puts it in project3/data/sample. Replaces sample data if it already exists, so skip if the sample data numbers should exactly match what I have in the tables
 ```
@@ -40,6 +41,7 @@ prefect server start            # starts the Prefect server
 ```
 Open a new terminal window, keep the old three
 ```bash
+cd project3
 python flow.py data/sample      # runs the flow on the committed sample. Check the results in project3/charts
 python flow.py                  # runs the flow on the entire dataset.  
 ```
