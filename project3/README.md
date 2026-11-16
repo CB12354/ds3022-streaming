@@ -9,7 +9,7 @@ Push: Bluesky. Pulls activity from Bluesky, a social networking service. No acco
 
 ## How to run
 
-Without any running Docker containers, from the main folder:
+Without any running Docker containers, from the main folder ds3022-streaming:
 ```bash
 # Virtual Environment
 python -m venv .venv # try python3 if python by itself fails
